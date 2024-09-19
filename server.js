@@ -1,7 +1,8 @@
 const app = require("./src/app");
-const mongoInstance = require('./src/dbs/init.mongodb')
+const mongoInstance = require("./src/dbs/init.mongodb");
+const { app: appConfig } = require("./src/configs/config.mongodb");
 
-const PORT = 3055;
+const PORT = appConfig.port;
 
 const server = app.listen(PORT, () => {
   console.log(`Ecommerce starts with port ${PORT}`);
@@ -9,5 +10,5 @@ const server = app.listen(PORT, () => {
 
 process.on("SIGINT", () => {
   server.close(() => console.log("Exit server."));
-  mongoInstance.disconnect()
+  mongoInstance.disconnect();
 });

@@ -1,5 +1,7 @@
 "use strict";
 const mongoose = require("mongoose");
+const { db } = require("./../configs/config.mongodb");
+const { host, username, password } = db;
 
 class Database {
   constructor() {
@@ -11,7 +13,8 @@ class Database {
       mongoose.set("debug", true);
       mongoose.set("debug", { color: true });
     }
-    const connectionString = `${type}+srv://preddevil:KAtCDDdtxzu3HfI9@phat-free-cluster.styqs.mongodb.net/`;
+    const connectionString = `${type}+srv://${username}:${password}@${host}/`;
+    console.log(connectionString);
     mongoose
       .connect(connectionString)
       .then(() => {
