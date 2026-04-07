@@ -5,24 +5,23 @@ const { default: helmet } = require("helmet");
 const compression = require("compression");
 const { checkOverload } = require("./helpers/check.connect");
 const app = express();
+const router = require("./routes");
 
 // init middleware
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(compression());
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 
 // init db
 require("./dbs/init.mongodb");
-checkOverload();
+// checkOverload();
 
 // init routes
-app.get("/", (req, res, next) => {
-  const str = "Hello Phat";
-  return res.status(200).json({
-    message: "Welcome to Ecommerce Backend",
-    metadata: str.repeat(10000),
-  });
-});
+app.use("/", router);
 
 // handle errors
 

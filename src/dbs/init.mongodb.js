@@ -14,7 +14,6 @@ class Database {
       mongoose.set("debug", { color: true });
     }
     const connectionString = `${type}+srv://${username}:${password}@${host}/`;
-    console.log(connectionString);
     mongoose
       .connect(connectionString)
       .then(() => {
