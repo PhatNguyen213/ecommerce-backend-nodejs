@@ -1,16 +1,30 @@
 "use strict";
 
+const { update } = require("lodash");
 const keytokenModel = require("../models/keytoken.model");
 
 class KeyTokenService {
-  static createKeyToken = async ({ userId, publicKey }) => {
+  static createKeyToken = async ({
+    userId,
+    publicKey,
+    privateKey,
+    refreshToken,
+  }) => {
     try {
-      // publicKey is binary, convert to string to save into db
-      const publicKeyString = publicKey.toString();
-      const tokens = await keytokenModel.create({
-        user: userId,
-        publicKey: publicKeyString,
-      });
+      const filter = { user: userId };
+      const update = {
+        publicKey,
+        privateKey,
+        refreshTokenUsed: [],
+        refreshToken,
+      };
+      const options = { upsert: true, new: true };
+
+      const tokens = await keytokenModel.findOneAndUpdate(
+        filter,
+        update,
+        options,
+      );
 
       return tokens ? tokens.publicKey : null;
     } catch (err) {
