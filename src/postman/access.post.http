@@ -3,10 +3,10 @@
 
 POST {{url_dev}}/shop/signup
 Content-Type: application/json
-x-api-key: 09ef2525e66908cc5ffe9f08f1466b995087ab1aaa484faf44a841b4b3e00210f185c99212d056e0da74e8e30ec37ec2c62b25e15a26a518f5d918cd93c44936
+x-api-key: 840ed4c56c9809cc14274586313031bdc79361848b6b74c2f2f6043245b2430141d858e6e0dd70b580708c214272a26f3d39d816593892b2ac4dd958502a0323
 
 {
     "name": "SHOP PHAT",
-    "email": "preddevil06@gmail.com",
+    "email": "preddevil02@gmail.com",
     "password": "admin"
 }

@@ -4,6 +4,7 @@ const dev = {
   },
   db: {
     host: process.env.DEV_DB_HOST,
+    port: process.env.DEV_DB_PORT,
     username: process.env.DEV_DB_USERNAME,
     password: process.env.DEV_DB_PASSWORD,
   },
@@ -15,6 +16,7 @@ const prod = {
   },
   db: {
     host: process.env.PROD_DB_HOST,
+    port: process.env.DEV_DB_PORT,
     username: process.env.PROD_DB_USERNAME,
     password: process.env.PROD_DB_PASSWORD,
   },

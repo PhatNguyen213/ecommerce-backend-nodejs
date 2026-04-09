@@ -1,7 +1,7 @@
 "use strict";
 const mongoose = require("mongoose");
 const { db } = require("./../configs/config.mongodb");
-const { host, username, password } = db;
+const { host, port, username, password } = db;
 
 class Database {
   constructor() {
@@ -13,13 +13,14 @@ class Database {
       mongoose.set("debug", true);
       mongoose.set("debug", { color: true });
     }
-    const connectionString = `${type}+srv://${username}:${password}@${host}/`;
+    // const connectionString = `${type}+srv://${username}:${password}@${host}/`;
+    const connectionString = `${type}://${host}:${port}/`;
     mongoose
       .connect(connectionString)
       .then(() => {
         console.log("Connected to MongoDB.");
       })
-      .catch((err) => console.log("Error connecting to MongoDB"));
+      .catch((err) => console.log("Error connecting to MongoDB", err));
   }
 
   disconnect() {
