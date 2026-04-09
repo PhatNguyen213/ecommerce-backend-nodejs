@@ -12,6 +12,14 @@ class AccessController {
 
     return response.send(res);
   };
+  logout = async (req, res, next) => {
+    const response = new OKResponse({
+      message: "Logout successfully!",
+      metadata: await AccessService.logout(req.keyStore),
+    });
+
+    return response.send(res);
+  };
   signup = async (req, res, next) => {
     const response = new CreatedResponse({
       message: "Registered successfully!",

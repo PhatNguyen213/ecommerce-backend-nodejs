@@ -22,6 +22,13 @@ const RoleShop = {
 };
 
 class AccessService {
+  static logout = async (keyStore) => {
+    console.log("keystore", keyStore);
+    const deletedKey = await KeyTokenService.removeKeyById(keyStore._id);
+
+    return deletedKey;
+  };
+
   static login = async ({ email, password, refreshToken = null }) => {
     const shop = await findByEmail({ email });
 
