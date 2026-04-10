@@ -6,6 +6,10 @@ const router = express.Router();
 
 router.post("/shop/signup", createAsyncHandler(accessController.signup));
 router.post("/shop/login", createAsyncHandler(accessController.login));
+router.post(
+  "/shop/refreshToken",
+  createAsyncHandler(accessController.handleRefreshToken),
+);
 
 router.use(authentication);
 

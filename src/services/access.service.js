@@ -4,7 +4,7 @@ const shopModel = require("../models/shop.model");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
-const { createTokenPair } = require("../auth/authUtils");
+const { createTokenPair, verifyJWTToken } = require("../auth/authUtils");
 const { getData } = require("../utils");
 const {
   ForbiddenRequestError,
@@ -22,6 +22,59 @@ const RoleShop = {
 };
 
 class AccessService {
+  /**
+   * When access token is expired, this handler will be hit.
+   * If token is found in the used (blacklist) array, remove the keystore for this shop
+   * and throw error and force re-login for both current valid and suspiscious users.
+   * If not, create new token pairs, and save this old refresh token into the used array.
+   */
+  static handleRefreshToken = async (refreshToken) => {
+    const foundKeyForUsedToken =
+      await KeyTokenService.findByRefreshTokenUsed(refreshToken);
+    if (foundKeyForUsedToken) {
+      const { userId } = verifyJWTToken(
+        refreshToken,
+        foundKeyForUsedToken.publicKey,
+      );
+
+      await KeyTokenService.deleteKeyById(userId);
+
+      throw new ForbiddenRequestError("Something is wrong. Please re-login.");
+    }
+
+    const holderToken = await KeyTokenService.findByRefreshToken(refreshToken);
+
+    if (!holderToken) {
+      throw new UnauthorizedError("Shop not registered.");
+    }
+
+    const { userId, email } = verifyJWTToken(
+      refreshToken,
+      holderToken.publicKey,
+    );
+
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) {
+      throw new UnauthorizedError("Shop not registered.");
+    }
+
+    const tokens = await createTokenPair(
+      { userId, email },
+      holderToken.publicKey,
+      holderToken.privateKey,
+    );
+
+    await KeyTokenService.updateRefreshTokenUsed(
+      userId,
+      refreshToken,
+      tokens.refreshToken,
+    );
+
+    return {
+      user: { userId, email },
+      tokens,
+    };
+  };
   static logout = async (keyStore) => {
     console.log("keystore", keyStore);
     const deletedKey = await KeyTokenService.removeKeyById(keyStore._id);
