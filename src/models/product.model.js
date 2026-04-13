@@ -1,9 +1,8 @@
 const { model, Schema } = require("mongoose");
 
-const DOCUMENT_NAME = "Product";
 const PRODUCT_COLLECTION_NAME = "Products";
-const ELECTRONIC_COLLECTION_NAME = "Clothings";
-const CLOTHING_COLLECTION_NAME = "Electronics";
+const ELECTRONIC_COLLECTION_NAME = "Electronics";
+const CLOTHING_COLLECTION_NAME = "Clothings";
 
 const productSchema = new Schema(
   {
@@ -13,7 +12,7 @@ const productSchema = new Schema(
     product_price: { type: Number, required: true },
     product_quantity: { type: Number, required: true },
     product_type: {
-      type: Number,
+      type: String,
       required: true,
       enum: ["Electronic", "Furniture", "Clothing"],
     },
