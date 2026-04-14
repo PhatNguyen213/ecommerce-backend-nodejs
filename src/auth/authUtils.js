@@ -23,21 +23,11 @@ const createTokenPair = async (payload, publicKey, privateKey) => {
       expiresIn: "7 days",
     });
 
-    // jwt.verify(accessToken, publicKey, (err, decode) => {
-    //   if (err) return console.log("error verifying::");
-    //   console.log("decode verify::", decode);
-    // });
-
     return { accessToken, refreshToken };
   } catch (error) {}
 };
 
 const authentication = createAsyncHandler(async (req, res, next) => {
-  /**
-   * 1/ Check missing userId?
-   *
-   */
-
   const userId = req.headers[HEADERS.CLIENT_ID];
 
   if (!userId) {
@@ -63,6 +53,7 @@ const authentication = createAsyncHandler(async (req, res, next) => {
     }
 
     req.keyStore = keyStore;
+    req.user = decodedPayload.userId;
 
     next();
   } catch (error) {
