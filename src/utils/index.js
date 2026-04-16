@@ -1,7 +1,13 @@
-'use strict'
+"use strict";
 
-const _ = require('lodash')
+const _ = require("lodash");
 
-const getData = (fields = [], object) => _.pick(object, fields)
+const getData = (fields = [], object) => _.pick(object, fields);
 
-module.exports = { getData }
+const getSelectData = (select = []) =>
+  Object.fromEntries(select.map((el) => [el, 1]));
+
+const getUnSelectData = (unselect = []) =>
+  Object.fromEntries(unselect.map((el) => [el, 0]));
+
+module.exports = { getData, getSelectData, getUnSelectData };

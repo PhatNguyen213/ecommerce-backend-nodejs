@@ -1,3 +1,4 @@
+const { getSelectData, getUnSelectData } = require("../../utils");
 const { product } = require("../product.model");
 const { Types } = require("mongoose");
 
@@ -25,8 +26,6 @@ const publishProduct = async ({ product_shop, product_id }) => {
 
   const { modifiedCount } = await foundProduct.updateOne(foundProduct);
 
-  console.log("mo", modifiedCount);
-
   return modifiedCount;
 };
 
@@ -42,8 +41,6 @@ const unPublishProduct = async ({ product_shop, product_id }) => {
   foundProduct.isPublished = false;
 
   const { modifiedCount } = await foundProduct.updateOne(foundProduct);
-
-  console.log("mo", modifiedCount);
 
   return modifiedCount;
 };
@@ -62,9 +59,39 @@ const searchProductByUser = async ({ keySearch }) => {
   return results;
 };
 
+const findAllProducts = async ({
+  limit,
+  sort: aSort,
+  page,
+  filter,
+  select,
+}) => {
+  const skip = (page - 1) * limit;
+  const sort = aSort === "ctime" ? { _id: -1 } : { _id: 1 };
+  const products = await product
+    .find(filter)
+    .sort(sort)
+    .skip(skip)
+    .limit(limit)
+    .select(getSelectData(select))
+    .lean();
+
+  return products;
+};
+
+const findProduct = async ({ product_id, unselect }) => {
+  const products = await product
+    .findById(product_id)
+    .select(getUnSelectData(unselect));
+
+  return products;
+};
+
 module.exports = {
   queryProduct,
   publishProduct,
   unPublishProduct,
   searchProductByUser,
+  findAllProducts,
+  findProduct,
 };

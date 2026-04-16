@@ -9,6 +9,9 @@ router.get(
   createAsyncHandler(ProductController.searchProduct),
 );
 
+router.get("", createAsyncHandler(ProductController.findAllProducts));
+router.get("/:product_id", createAsyncHandler(ProductController.findProduct));
+
 router.use(authentication);
 
 router.get("/drafts/all", createAsyncHandler(ProductController.getAllDraft));

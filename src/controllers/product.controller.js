@@ -70,6 +70,26 @@ class ProductController {
 
     return response.send(res);
   };
+
+  static findAllProducts = async (req, res, next) => {
+    const response = new OKResponse({
+      message: "Find All Products successfully!",
+      metadata: await ProductService.findAllProducts(req.query),
+    });
+
+    return response.send(res);
+  };
+
+  static findProduct = async (req, res, next) => {
+    const response = new OKResponse({
+      message: "Find Products successfully!",
+      metadata: await ProductService.findProduct({
+        product_id: req.params.product_id,
+      }),
+    });
+
+    return response.send(res);
+  };
 }
 
 module.exports = ProductController;
