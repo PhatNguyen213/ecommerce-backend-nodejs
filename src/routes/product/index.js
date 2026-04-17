@@ -21,6 +21,10 @@ router.get(
 );
 
 router.post("", createAsyncHandler(ProductController.createProduct));
+router.patch(
+  "/:product_id",
+  createAsyncHandler(ProductController.updateProduct),
+);
 router.post(
   "/publish/:id",
   createAsyncHandler(ProductController.publishProduct),

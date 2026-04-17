@@ -16,6 +16,22 @@ class ProductController {
     return response.send(res);
   };
 
+  static updateProduct = async (req, res, next) => {
+    const response = new OKResponse({
+      message: "Update product successfully!",
+      metadata: await ProductService.updateProduct(
+        req.body.product_type,
+        req.params.product_id,
+        {
+          ...req.body,
+          product_shop: req.user,
+        },
+      ),
+    });
+
+    return response.send(res);
+  };
+
   static publishProduct = async (req, res, next) => {
     const response = new OKResponse({
       message: "Publish product successfully!",

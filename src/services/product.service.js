@@ -14,7 +14,9 @@ const {
   searchProductByUser,
   findAllProducts,
   findProduct,
+  updateProductById,
 } = require("../models/repositories/product.repo");
+const { removeUndefinedProperties, updateNestedObject } = require("../utils");
 
 // define Factory class to create product
 class ProductFactory {
@@ -36,12 +38,15 @@ class ProductFactory {
     return new ProductClass(payload).createProduct();
   }
 
-  static async updateProduct(type, payload) {
+  static async updateProduct(type, product_id, payload) {
     const ProductClass = this.productRegistry[type];
 
     if (!ProductClass) throw new BadRequestError("Invalid Product type");
 
-    return new ProductClass(payload).createProduct();
+    const updatePayload = removeUndefinedProperties(
+      updateNestedObject(payload),
+    );
+    return new ProductClass(payload).updateProduct(product_id, updatePayload);
   }
 
   static async findAllDrafts({ product_shop, limit = 50, skip = 0 }) {
@@ -111,6 +116,14 @@ class Product {
   async createProduct(product_id) {
     return await product.create({ ...this, _id: product_id });
   }
+
+  async updateProduct(product_id, payload) {
+    return await updateProductById({
+      product_id,
+      payload,
+      model: product,
+    });
+  }
 }
 
 // create Product sub-types for different types of products
@@ -133,6 +146,20 @@ class Clothing extends Product {
 
     return newProduct;
   }
+
+  async updateProduct(product_id, payload) {
+    if (this.product_attributes) {
+      await updateProductById({
+        product_id,
+        payload,
+        model: clothing,
+      });
+    }
+
+    const updatedProduct = await super.updateProduct(product_id, payload);
+
+    return updatedProduct;
+  }
 }
 
 class Electronic extends Product {
@@ -154,6 +181,20 @@ class Electronic extends Product {
 
     return newProduct;
   }
+
+  async updateProduct(product_id, payload) {
+    if (this.product_attributes) {
+      await updateProductById({
+        product_id,
+        payload,
+        model: electronic,
+      });
+    }
+
+    const updatedProduct = await super.updateProduct(product_id, payload);
+
+    return updatedProduct;
+  }
 }
 
 class Furniture extends Product {
@@ -174,6 +215,20 @@ class Furniture extends Product {
     }
 
     return newProduct;
+  }
+
+  async updateProduct(product_id, payload) {
+    if (this.product_attributes) {
+      await updateProductById({
+        product_id,
+        payload,
+        model: furniture,
+      });
+    }
+
+    const updatedProduct = await super.updateProduct(product_id, payload);
+
+    return updatedProduct;
   }
 }
 

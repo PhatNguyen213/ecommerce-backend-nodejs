@@ -10,4 +10,32 @@ const getSelectData = (select = []) =>
 const getUnSelectData = (unselect = []) =>
   Object.fromEntries(unselect.map((el) => [el, 0]));
 
-module.exports = { getData, getSelectData, getUnSelectData };
+const removeUndefinedProperties = (obj) => {
+  Object.keys(obj).forEach((key) => {
+    if (obj[key] === null || obj[key] === undefined) {
+      delete obj[key];
+    }
+  });
+
+  return obj;
+};
+
+const updateNestedObject = (obj, final = {}, parentField) => {
+  return Object.keys(obj).reduce((accumulator, currentKey) => {
+    const key = parentField ? `${parentField}.${currentKey}` : currentKey;
+    if (typeof obj[currentKey] !== "object") {
+      accumulator[key] = obj[currentKey];
+    } else {
+      updateNestedObject(obj[currentKey], final, currentKey);
+    }
+    return accumulator;
+  }, final);
+};
+
+module.exports = {
+  getData,
+  getSelectData,
+  getUnSelectData,
+  removeUndefinedProperties,
+  updateNestedObject,
+};
