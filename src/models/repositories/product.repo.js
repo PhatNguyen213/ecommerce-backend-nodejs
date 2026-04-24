@@ -76,6 +76,8 @@ const findAllProducts = async ({
     .select(getSelectData(select))
     .lean();
 
+  console.log("product", products);
+
   return products;
 };
 
