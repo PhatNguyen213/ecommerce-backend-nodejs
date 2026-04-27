@@ -1,4 +1,8 @@
-const { getSelectData, getUnSelectData } = require("../../utils");
+const {
+  getSelectData,
+  getUnSelectData,
+  convertToObjectIdMongo,
+} = require("../../utils");
 const { product } = require("../product.model");
 const { Types } = require("mongoose");
 
@@ -89,6 +93,14 @@ const findProduct = async ({ product_id, unselect }) => {
   return products;
 };
 
+const getProductById = async (product_id) => {
+  const products = await product
+    .findOne({ _id: convertToObjectIdMongo(product_id) })
+    .lean();
+
+  return products;
+};
+
 const updateProductById = async ({
   product_id,
   payload,
@@ -108,4 +120,5 @@ module.exports = {
   findAllProducts,
   findProduct,
   updateProductById,
+  getProductById,
 };
